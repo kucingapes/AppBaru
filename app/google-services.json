@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "361973419903",
+    "firebase_url": "https://sejarahindotoday.firebaseio.com",
+    "project_id": "sejarahindotoday",
+    "storage_bucket": "sejarahindotoday.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361973419903:android:5f89332dce720364",
+        "android_client_info": {
+          "package_name": "com.utsman.kucingapes.sejarahindonesiatoday"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361973419903-jj9ppaa9hddd5ulrtlsm51dvt8cbc1gm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.utsman.kucingapes.sejarahindonesiatoday",
+            "certificate_hash": "7deee7d5d167b54530495938fcc9908d881a30f5"
+          }
+        },
+        {
+          "client_id": "361973419903-8j9ufn3gjitf6uigl38epd7i67tcg0k6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.utsman.kucingapes.sejarahindonesiatoday",
+            "certificate_hash": "c0de2f128a18503309166db0b03dd2a9ff178c42"
+          }
+        },
+        {
+          "client_id": "361973419903-ck0k1tgnqj1n8csrf1gvfiomn2os132l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtODcbXjqH9YhutYzaUEbUlKWl3BO4EkA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361973419903-ck0k1tgnqj1n8csrf1gvfiomn2os132l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
