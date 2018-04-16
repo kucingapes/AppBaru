@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage("Loading...");
         }
-
         mProgressDialog.show();
     }
 

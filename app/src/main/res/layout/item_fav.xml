@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:clickable="true"
-    android:focusable="true"
-    android:background="?attr/selectableItemBackground">
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +16,8 @@
             android:id="@+id/re_img"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="0dp"
