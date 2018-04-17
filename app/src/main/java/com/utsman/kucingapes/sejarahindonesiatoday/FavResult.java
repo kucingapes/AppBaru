@@ -1,6 +1,7 @@
 package com.utsman.kucingapes.sejarahindonesiatoday;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class FavResult extends AppCompatActivity {
 
     private ImageView imgView, share, btnFav;
@@ -34,6 +38,11 @@ public class FavResult extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav_result);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Tajawal-Medium.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         bindView();
         btnFav.setVisibility(View.GONE);
         Bundle bundle = getIntent().getExtras();
@@ -93,6 +102,11 @@ public class FavResult extends AppCompatActivity {
                 }, 2000);
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     public void showProgressDialog() {

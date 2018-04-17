@@ -22,6 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class FavoritActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
@@ -33,6 +36,11 @@ public class FavoritActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorit);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Tajawal-Medium.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
@@ -81,6 +89,11 @@ public class FavoritActivity extends AppCompatActivity {
         };
 
         recyclerView.setAdapter(recyclerAdapter);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
