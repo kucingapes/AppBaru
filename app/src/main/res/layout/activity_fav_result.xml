@@ -9,6 +9,9 @@
     <include layout="@layout/card_item"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_margin="50dp"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
 </android.support.constraint.ConstraintLayout>

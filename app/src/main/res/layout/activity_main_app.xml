@@ -22,29 +22,4 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
-        android:translationZ="2dp"
-        android:gravity="end">
-
-        <ImageView
-            android:id="@+id/share"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/press_effect"
-            android:layout_marginRight="10dp" />
-
-        <ImageView
-            android:id="@+id/btn_fav"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/star" />
-    </LinearLayout>
-
-
-
 </RelativeLayout>

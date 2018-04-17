@@ -24,11 +24,9 @@ import com.google.firebase.database.Query;
 
 public class FavoritActivity extends AppCompatActivity {
 
-    private DatabaseReference mDatabase;
     FirebaseAuth mAuth;
     FirebaseUser user;
 
-    private RecyclerView recyclerView;
     private FirebaseRecyclerAdapter<Getter, FavoritActivity.ItemViewHolder> recyclerAdapter;
 
     @Override
@@ -37,10 +35,10 @@ public class FavoritActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorit);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
         mDatabase.keepSynced(true);
 
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Query query = mDatabase.orderByKey();

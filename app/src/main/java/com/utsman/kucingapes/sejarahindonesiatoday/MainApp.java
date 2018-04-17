@@ -1,6 +1,8 @@
 package com.utsman.kucingapes.sejarahindonesiatoday;
 
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -28,6 +30,7 @@ import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,18 +38,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class MainApp extends AppCompatActivity {
 
     private ImageView btnFav, imgView, share;
     private TextView tvTitle, tvBody, tvDate;
     private ProgressDialog mProgressDialog;
-    private CardView shareLayout;
+    private RoundedCornerLayout shareLayout;
 
     Bitmap bitmap;
 
@@ -59,6 +66,11 @@ public class MainApp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Tajawal-Medium.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         bindView();
 
         mAuth = FirebaseAuth.getInstance();
@@ -71,6 +83,7 @@ public class MainApp extends AppCompatActivity {
         folder.mkdirs();
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("data");
+        mDatabase.keepSynced(true);
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,11 +98,6 @@ public class MainApp extends AppCompatActivity {
                 tvTitle.setText(title);
                 tvBody.setText(body);
                 tvDate.setText(date);
-
-                shareLayout.setDrawingCacheEnabled(true);
-                shareLayout.buildDrawingCache();
-                bitmap = shareLayout.getDrawingCache();
-
             }
 
             @Override
@@ -98,15 +106,13 @@ public class MainApp extends AppCompatActivity {
             }
         });
 
+
         DatabaseReference favDatabase = FirebaseDatabase.getInstance().getReference().child("favDat");
         favDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 fav = dataSnapshot.child(user.getUid()).child("fav").getValue(String.class);
 
-                // Toast.makeText(getApplicationContext(), fav, Toast.LENGTH_SHORT).show();
-
-                //assert fav != null;
                 if (fav != null) {
                     if (fav.equals("iye")){
                         btnFav.setImageResource(R.drawable.star_fill);
@@ -122,7 +128,7 @@ public class MainApp extends AppCompatActivity {
 
             }
         });
-        mDatabase.keepSynced(true);
+
 
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,13 +136,17 @@ public class MainApp extends AppCompatActivity {
                 showProgressDialog();
                 String lokasi = "mnt/sdcard/.kucingapes/cache/cacheimg.jpg";
 
+                shareLayout.setDrawingCacheEnabled(true);
+                shareLayout.buildDrawingCache();
+                bitmap = shareLayout.getDrawingCache();
+
                 Bitmap image = Bitmap.createBitmap(shareLayout.getWidth(),
                         shareLayout.getHeight(),
                         Bitmap.Config.RGB_565);
 
                 shareLayout.draw(new Canvas(image));
 
-                shareLayout.setDrawingCacheEnabled(true);
+                //shareLayout.setDrawingCacheEnabled(true);
                 try {
                     image.compress(Bitmap.CompressFormat.JPEG, 95,
                             new FileOutputStream(lokasi));
@@ -165,6 +175,11 @@ public class MainApp extends AppCompatActivity {
         });
 
         buttonOnClik();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void buttonOnClik() {
@@ -203,7 +218,7 @@ public class MainApp extends AppCompatActivity {
         btnFav = findViewById(R.id.btn_fav);
         share = findViewById(R.id.share);
 
-        shareLayout = findViewById(R.id.card);
+        shareLayout = findViewById(R.id.lay_container);
     }
 
     public void pav(View view) {

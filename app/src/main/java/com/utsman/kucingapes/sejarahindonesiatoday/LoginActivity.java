@@ -3,10 +3,8 @@ package com.utsman.kucingapes.sejarahindonesiatoday;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,36 +17,39 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.onesignal.OSNotification;
-import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 222;
     private GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
-    private ProgressDialog mProgressDialog;
+    ProgressDialog mProgressDialog;
     FirebaseUser user;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
+
+        if (!FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
 
         // OneSignal Initialization
         OneSignal.startInit(this)
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Toast.makeText(MainActivity.this, "Login gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login gagal", Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "sukses", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "sukses", Toast.LENGTH_SHORT).show();
                             updateUI(user);
 
                             //updateUI(user);
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                             //Log.w(TAG, "signInWithCredential:failure", task.getException());
                             //Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             //updateUI(null);
-                            Toast.makeText(MainActivity.this, "gagal", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "gagal", Toast.LENGTH_SHORT).show();
                         }
 
                         hideProgressDialog();
@@ -148,16 +149,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
 
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            //String fav = "fav";
             Intent intent = new Intent(this, MainApp.class);
-            //intent.putExtra("fav", fav);
             startActivity(intent);
         }
     }
@@ -167,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void notificationOpened(OSNotificationOpenResult result) {
             JSONObject data = result.notification.payload.additionalData;
-            Object activityToLaunch = MainActivity.class;
 
             imgUrl = data.optString("img", null);
             title = data.optString("title", null);
@@ -179,19 +177,15 @@ public class MainActivity extends AppCompatActivity {
             databaseReference.child("title").setValue(title);
             databaseReference.child("body").setValue(contBody);
             databaseReference.child("date").setValue(date);
+            databaseReference.keepSynced(true);
 
-            /*FirebaseDatabase database = FirebaseDatabase.getInstance();
-            HashMap<String, Object> favData = new HashMap<>();
-            favData.put("fav", "nggak");
-
-            DatabaseReference favRef = database.getReference("favDat");
-            favRef.child(user.getUid()).setValue(favData);*/
             mAuth = FirebaseAuth.getInstance();
             user = mAuth.getCurrentUser();
 
             DatabaseReference favRef = FirebaseDatabase.getInstance().getReference().child("favDat");
             favRef.child(user.getUid()).child("fav").setValue("nggak");
 
+            Object activityToLaunch = LoginActivity.class;
             Intent intent = new Intent(getApplicationContext(), (Class<?>) activityToLaunch);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
