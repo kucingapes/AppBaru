@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
@@ -38,6 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jaeger.library.StatusBarUtil;
 import com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout;
 
 import java.io.File;
@@ -45,15 +48,19 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 public class MainApp extends AppCompatActivity {
 
-    private ImageView btnFav, imgView, share;
+    private ImageView btnFav, imgView, share, imgBg, backBtn;
     private TextView tvTitle, tvBody, tvDate;
     private ProgressDialog mProgressDialog;
     private RoundedCornerLayout shareLayout;
+    private FloatingActionButton fabMenu;
 
     Bitmap bitmap;
 
@@ -71,7 +78,9 @@ public class MainApp extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        StatusBarUtil.setTranslucentForImageView(this, (int) 5f, shareLayout);
         bindView();
+        backBtn.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -98,6 +107,11 @@ public class MainApp extends AppCompatActivity {
                 tvTitle.setText(title);
                 tvBody.setText(body);
                 tvDate.setText(date);
+
+                Glide.with(MainApp.this)
+                        .load(imgUrl)
+                        .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                        .into(imgBg);
             }
 
             @Override
@@ -208,6 +222,13 @@ public class MainApp extends AppCompatActivity {
             }
         });
 
+        fabMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainApp.this, FavoritActivity.class));
+            }
+        });
+
     }
 
     private void bindView() {
@@ -217,12 +238,11 @@ public class MainApp extends AppCompatActivity {
         tvDate = findViewById(R.id.tv_date);
         btnFav = findViewById(R.id.btn_fav);
         share = findViewById(R.id.share);
+        imgBg = findViewById(R.id.img_bg);
+        fabMenu = findViewById(R.id.fab);
+        backBtn = findViewById(R.id.back);
 
         shareLayout = findViewById(R.id.lay_container);
-    }
-
-    public void pav(View view) {
-        startActivity(new Intent(this, FavoritActivity.class));
     }
 
     @Override

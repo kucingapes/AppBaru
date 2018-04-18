@@ -21,16 +21,16 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/star"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp" />
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp" />
 
         <ImageView
             android:id="@+id/share"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/press_effect"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="20dp" />
     </LinearLayout>
 
     <com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout

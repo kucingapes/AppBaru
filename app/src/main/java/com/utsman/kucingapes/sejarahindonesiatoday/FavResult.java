@@ -9,26 +9,34 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.jaeger.library.StatusBarUtil;
 import com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 public class FavResult extends AppCompatActivity {
 
-    private ImageView imgView, share, btnFav;
-    private TextView tvTitle, tvBody, tvDate;
+    private ImageView imgView, share, btnFav, imgBg, backBtn;
+    private TextView tvTitle, tvBody, tvDate, tvToolbar;
+    private FloatingActionButton fabMenu;
+    private Toolbar toolbar;
 
     ProgressDialog mProgressDialog;
     RoundedCornerLayout shareLayout;
@@ -37,14 +45,20 @@ public class FavResult extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fav_result);
+        //setContentView(R.layout.activity_fav_result);
+        setContentView(R.layout.activity_main_app);
+        StatusBarUtil.setTranslucentForImageView(this, (int) 5f, shareLayout);
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Tajawal-Medium.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
         bindView();
+
         btnFav.setVisibility(View.GONE);
+        fabMenu.setVisibility(View.GONE);
+
         Bundle bundle = getIntent().getExtras();
         final String img = bundle.getString("img");
         final String title = bundle.getString("title");
@@ -55,9 +69,15 @@ public class FavResult extends AppCompatActivity {
                 .load(img)
                 .into(imgView);
 
+        Glide.with(this)
+                .load(img)
+                .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                .into(imgBg);
+
         tvTitle.setText(title);
         tvDate.setText(date);
         tvBody.setText(body);
+        tvToolbar.setText(date);
 
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +122,13 @@ public class FavResult extends AppCompatActivity {
                 }, 2000);
             }
         });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -132,5 +159,10 @@ public class FavResult extends AppCompatActivity {
         share = findViewById(R.id.share);
         btnFav = findViewById(R.id.btn_fav);
         shareLayout = findViewById(R.id.lay_container);
+        imgBg = findViewById(R.id.img_bg);
+        tvToolbar = findViewById(R.id.title_toolbar);
+        fabMenu = findViewById(R.id.fab);
+        toolbar = findViewById(R.id.toolbar);
+        backBtn = findViewById(R.id.back);
     }
 }
