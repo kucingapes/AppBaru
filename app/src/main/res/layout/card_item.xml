@@ -8,36 +8,10 @@
     app:cardCornerRadius="5dp"
     tools:ignore="MissingPrefix">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:translationZ="2dp"
-        android:layout_gravity="bottom"
-        android:gravity="end">
-
-        <ImageView
-            android:id="@+id/btn_fav"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/star"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp" />
-
-        <ImageView
-            android:id="@+id/share"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/press_effect"
-            android:layout_marginRight="20dp" />
-    </LinearLayout>
-
     <com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout
         android:id="@+id/lay_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="true">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/img_view"
@@ -85,6 +59,31 @@
                 android:layout_alignParentBottom="true"
                 fontPath="fonts/Tajawal-Medium.ttf"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="end">
+
+            <ImageView
+                android:id="@+id/btn_fav"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/star"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp" />
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/press_effect"
+                android:layout_marginRight="20dp" />
         </LinearLayout>
 
     </com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout>

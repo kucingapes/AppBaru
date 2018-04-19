@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -32,6 +31,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -60,9 +60,10 @@ public class MainApp extends AppCompatActivity {
     private TextView tvTitle, tvBody, tvDate;
     private ProgressDialog mProgressDialog;
     private RoundedCornerLayout shareLayout;
-    private FloatingActionButton fabMenu;
+    //private FloatingActionButton fabMenu;
 
     Bitmap bitmap;
+    FloatingActionButton fabFav, fabAbout;
 
     private String imgUrl, title, body, date, fav;
 
@@ -160,7 +161,6 @@ public class MainApp extends AppCompatActivity {
 
                 shareLayout.draw(new Canvas(image));
 
-                //shareLayout.setDrawingCacheEnabled(true);
                 try {
                     image.compress(Bitmap.CompressFormat.JPEG, 95,
                             new FileOutputStream(lokasi));
@@ -222,13 +222,12 @@ public class MainApp extends AppCompatActivity {
             }
         });
 
-        fabMenu.setOnClickListener(new View.OnClickListener() {
+        fabFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainApp.this, FavoritActivity.class));
             }
         });
-
     }
 
     private void bindView() {
@@ -239,8 +238,9 @@ public class MainApp extends AppCompatActivity {
         btnFav = findViewById(R.id.btn_fav);
         share = findViewById(R.id.share);
         imgBg = findViewById(R.id.img_bg);
-        fabMenu = findViewById(R.id.fab);
         backBtn = findViewById(R.id.back);
+        fabFav = findViewById(R.id.menu_fav);
+        fabAbout = findViewById(R.id.menu_about);
 
         shareLayout = findViewById(R.id.lay_container);
     }

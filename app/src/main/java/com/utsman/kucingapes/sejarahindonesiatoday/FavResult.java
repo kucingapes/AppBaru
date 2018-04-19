@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Environment;
@@ -12,7 +11,6 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +34,6 @@ public class FavResult extends AppCompatActivity {
     private ImageView imgView, share, btnFav, imgBg, backBtn;
     private TextView tvTitle, tvBody, tvDate, tvToolbar;
     private FloatingActionButton fabMenu;
-    private Toolbar toolbar;
 
     ProgressDialog mProgressDialog;
     RoundedCornerLayout shareLayout;
@@ -162,7 +159,6 @@ public class FavResult extends AppCompatActivity {
         imgBg = findViewById(R.id.img_bg);
         tvToolbar = findViewById(R.id.title_toolbar);
         fabMenu = findViewById(R.id.fab);
-        toolbar = findViewById(R.id.toolbar);
         backBtn = findViewById(R.id.back);
     }
 }

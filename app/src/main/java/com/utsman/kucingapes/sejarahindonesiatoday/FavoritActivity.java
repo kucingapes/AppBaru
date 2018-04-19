@@ -21,11 +21,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.jaeger.library.StatusBarUtil;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FavoritActivity extends AppCompatActivity {
+
+    private ImageView back;
+    private TextView titleBar;
 
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -41,6 +45,9 @@ public class FavoritActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        StatusBarUtil.setTransparent(this);
+        //StatusBarUtil.setDarkMode(FavoritActivity.this);
+        StatusBarUtil.setLightMode(this);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
