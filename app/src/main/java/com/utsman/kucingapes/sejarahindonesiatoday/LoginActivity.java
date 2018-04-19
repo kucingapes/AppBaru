@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -47,9 +48,12 @@ import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.relex.circleindicator.CircleIndicator;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -287,9 +291,9 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         int[] list_img = {
-                R.drawable.share_on,
-                R.drawable.star,
-                R.drawable.back
+                R.drawable.thinker,
+                R.drawable.molor,
+                R.drawable.ngantuk
         };
 
         String[] list_judul = {
@@ -325,15 +329,20 @@ public class LoginActivity extends AppCompatActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_start, container, false);
-            LinearLayout linearLayout = view.findViewById(R.id.login_start);
+            RelativeLayout relativeLayout = view.findViewById(R.id.login_start);
             TextView tvJudulStart = view.findViewById(R.id.start_judul);
             TextView tvDescStart = view.findViewById(R.id.start_desc);
             ImageView imgStart = view.findViewById(R.id.imgStart);
 
-            linearLayout.setBackgroundColor(list_bg[position]);
+            //relativeLayout.setBackgroundColor(list_bg[position]);
             tvJudulStart.setText(list_judul[position]);
             tvDescStart.setText(list_desc[position]);
-            imgStart.setImageResource(list_img[position]);
+            //imgStart.setImageResource(list_img[position]);
+
+            Glide.with(view)
+                    .load(list_img[position])
+                    .apply(bitmapTransform(new BlurTransformation(25, 3)))
+                    .into(imgStart);
 
             container.addView(view);
             return view;
@@ -341,7 +350,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((LinearLayout) object);
+            container.removeView((RelativeLayout) object);
         }
     }
 }
