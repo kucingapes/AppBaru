@@ -23,13 +23,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.jaeger.library.StatusBarUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FavoritActivity extends AppCompatActivity {
 
-    private ImageView back;
-    private TextView titleBar;
+    @BindView(R.id.back) ImageView backBtn;
+    @BindView(R.id.title_toolbar) TextView titleBar;
+
 
     FirebaseAuth mAuth;
     FirebaseUser user;
@@ -45,8 +48,9 @@ public class FavoritActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        ButterKnife.bind(this);
+        configActionBar();
         StatusBarUtil.setTransparent(this);
-        //StatusBarUtil.setDarkMode(FavoritActivity.this);
         StatusBarUtil.setLightMode(this);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -96,6 +100,20 @@ public class FavoritActivity extends AppCompatActivity {
         };
 
         recyclerView.setAdapter(recyclerAdapter);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();
+            }
+        });
+    }
+
+    private void configActionBar() {
+        backBtn.setImageResource(R.drawable.back_black);
+        titleBar.setTextColor(getResources().getColor(R.color.dark));
+        titleBar.setText("Poster Favorit");
     }
 
     @Override
@@ -133,12 +151,6 @@ public class FavoritActivity extends AppCompatActivity {
             tvDate.setText(date);
         }
 
-      /*  public void setImageView (String imageView, Context context){
-            ImageView img = view.findViewById(R.id.re_img);
-            Glide.with(context)
-                    .load(imageView)
-                    .into(img);
-        }*/
         public void setImg(Context ctx, String img){
             ImageView imgView = view.findViewById(R.id.re_img);
             Glide.with(ctx).load(img).into(imgView);

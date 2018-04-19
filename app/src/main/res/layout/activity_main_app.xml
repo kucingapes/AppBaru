@@ -20,33 +20,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_width="match_parent"/>
+        <include layout="@layout/toolbar"/>
 
-        <RelativeLayout
+        <include layout="@layout/card_item"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/menu"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="20dp"
-                android:visibility="gone"
-                android:translationZ="2dp"/>
-
-            <include layout="@layout/card_item"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="100dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-        </RelativeLayout>
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="100dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
 
     </LinearLayout>
 
@@ -60,9 +42,9 @@
         fab:menu_fab_size="normal"
         fab:menu_showShadow="true"
         fab:menu_shadowColor="#66000000"
-        fab:menu_shadowRadius="4dp"
+        fab:menu_shadowRadius="2dp"
         fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="3dp"
+        fab:menu_shadowYOffset="1dp"
         fab:menu_colorNormal="#DA4336"
         fab:menu_colorPressed="#E75043"
         fab:menu_colorRipple="#99FFFFFF"
@@ -89,7 +71,8 @@
         fab:menu_labels_maxLines="-1"
         fab:menu_labels_position="left"
         fab:menu_openDirection="up"
-        fab:menu_backgroundColor="@color/foregr">
+        fab:menu_backgroundColor="@color/foregr"
+        android:layout_alignParentEnd="true">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_about"
@@ -97,7 +80,11 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_user"
             fab:fab_size="mini"
-            fab:fab_label="Tentang Aplikasi" />
+            fab:fab_label="Tentang Aplikasi"
+            fab:fab_shadowRadius="2dp"
+            fab:fab_shadowXOffset="1dp"
+            fab:fab_shadowYOffset="1dp"
+            fab:fab_shadowColor="#66000000"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_fav"
@@ -105,7 +92,11 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_heart"
             fab:fab_size="mini"
-            fab:fab_label="Poster Favorit" />
+            fab:fab_label="Poster Favorit"
+            fab:fab_shadowRadius="2dp"
+            fab:fab_shadowXOffset="1dp"
+            fab:fab_shadowYOffset="1dp"
+            fab:fab_shadowColor="#66000000"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 

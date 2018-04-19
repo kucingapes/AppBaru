@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.jaeger.library.StatusBarUtil;
 import com.utsman.kucingapes.sejarahindonesiatoday.Lib.RoundedCornerLayout;
 
@@ -23,6 +24,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -31,18 +34,25 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class FavResult extends AppCompatActivity {
 
-    private ImageView imgView, share, btnFav, imgBg, backBtn;
-    private TextView tvTitle, tvBody, tvDate, tvToolbar;
-    private FloatingActionButton fabMenu;
+    @BindView(R.id.tv_judul) TextView tvTitle;
+    @BindView(R.id.materi_body) TextView tvBody;
+    @BindView(R.id.tv_date) TextView tvDate;
+    @BindView(R.id.img_view) ImageView imgView;
+    @BindView(R.id.img_bg) ImageView imgBg;
+    @BindView(R.id.share) ImageView share;
+    @BindView(R.id.back) ImageView backBtn;
+    @BindView(R.id.btn_fav) ImageView btnFav;
+    @BindView(R.id.menu) FloatingActionMenu fabMenu;
+    @BindView(R.id.lay_container) RoundedCornerLayout shareLayout;
+    @BindView(R.id.title_toolbar) TextView tvToolbar;
+
 
     ProgressDialog mProgressDialog;
-    RoundedCornerLayout shareLayout;
     Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_fav_result);
         setContentView(R.layout.activity_main_app);
         StatusBarUtil.setTranslucentForImageView(this, (int) 5f, shareLayout);
 
@@ -51,11 +61,9 @@ public class FavResult extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-        bindView();
-
-        btnFav.setVisibility(View.GONE);
+        ButterKnife.bind(this);
         fabMenu.setVisibility(View.GONE);
-
+        btnFav.setVisibility(View.GONE);
         Bundle bundle = getIntent().getExtras();
         final String img = bundle.getString("img");
         final String title = bundle.getString("title");
@@ -92,7 +100,6 @@ public class FavResult extends AppCompatActivity {
 
                 shareLayout.draw(new Canvas(image));
 
-                //shareLayout.setDrawingCacheEnabled(true);
                 try {
                     image.compress(Bitmap.CompressFormat.JPEG, 95,
                             new FileOutputStream(lokasi));
@@ -146,19 +153,5 @@ public class FavResult extends AppCompatActivity {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    private void bindView() {
-        imgView = findViewById(R.id.img_view);
-        tvTitle = findViewById(R.id.tv_judul);
-        tvBody = findViewById(R.id.materi_body);
-        tvDate = findViewById(R.id.tv_date);
-        share = findViewById(R.id.share);
-        btnFav = findViewById(R.id.btn_fav);
-        shareLayout = findViewById(R.id.lay_container);
-        imgBg = findViewById(R.id.img_bg);
-        tvToolbar = findViewById(R.id.title_toolbar);
-        fabMenu = findViewById(R.id.fab);
-        backBtn = findViewById(R.id.back);
     }
 }

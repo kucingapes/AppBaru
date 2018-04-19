@@ -28,6 +28,7 @@
         </service>
         <activity android:name=".FavoritActivity" />
         <activity android:name=".FavResult" />
+        <activity android:name=".Profile"/>
     </application>
 
 </manifest>

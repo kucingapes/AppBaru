@@ -32,6 +32,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +49,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -56,15 +60,23 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class MainApp extends AppCompatActivity {
 
-    private ImageView btnFav, imgView, share, imgBg, backBtn;
-    private TextView tvTitle, tvBody, tvDate;
-    private ProgressDialog mProgressDialog;
-    private RoundedCornerLayout shareLayout;
-    //private FloatingActionButton fabMenu;
+
+    @BindView(R.id.tv_judul) TextView tvTitle;
+    @BindView(R.id.materi_body) TextView tvBody;
+    @BindView(R.id.tv_date) TextView tvDate;
+    @BindView(R.id.img_view) ImageView imgView;
+    @BindView(R.id.img_bg) ImageView imgBg;
+    @BindView(R.id.share) ImageView share;
+    @BindView(R.id.back) ImageView backBtn;
+    @BindView(R.id.btn_fav) ImageView btnFav;
+    @BindView(R.id.menu) FloatingActionMenu fabMenu;
+    @BindView(R.id.menu_fav) FloatingActionButton fabFav;
+    @BindView(R.id.menu_about) FloatingActionButton fabAbout;
+    @BindView(R.id.lay_container) RoundedCornerLayout shareLayout;
 
     Bitmap bitmap;
-    FloatingActionButton fabFav, fabAbout;
 
+    private ProgressDialog mProgressDialog;
     private String imgUrl, title, body, date, fav;
 
     FirebaseUser user;
@@ -80,9 +92,10 @@ public class MainApp extends AppCompatActivity {
                 .build()
         );
         StatusBarUtil.setTranslucentForImageView(this, (int) 5f, shareLayout);
-        bindView();
+        ButterKnife.bind(this);
+        //bindView();
         backBtn.setVisibility(View.GONE);
-
+        fabMenu.setClosedOnTouchOutside(true);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -200,7 +213,7 @@ public class MainApp extends AppCompatActivity {
         btnFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //btnFav.setImageDrawable(getResources().getDrawable(R.drawable.star_fill));
+                btnFav.setImageDrawable(getResources().getDrawable(R.drawable.star_fill));
                 HashMap<String, Object> dataMap = new HashMap<>();
                 dataMap.put("img", imgUrl);
                 dataMap.put("title", title);
@@ -226,23 +239,16 @@ public class MainApp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainApp.this, FavoritActivity.class));
+                fabMenu.close(true);
             }
         });
-    }
 
-    private void bindView() {
-        imgView = findViewById(R.id.img_view);
-        tvTitle = findViewById(R.id.tv_judul);
-        tvBody = findViewById(R.id.materi_body);
-        tvDate = findViewById(R.id.tv_date);
-        btnFav = findViewById(R.id.btn_fav);
-        share = findViewById(R.id.share);
-        imgBg = findViewById(R.id.img_bg);
-        backBtn = findViewById(R.id.back);
-        fabFav = findViewById(R.id.menu_fav);
-        fabAbout = findViewById(R.id.menu_about);
-
-        shareLayout = findViewById(R.id.lay_container);
+        fabAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainApp.this, Profile.class));
+            }
+        });
     }
 
     @Override
