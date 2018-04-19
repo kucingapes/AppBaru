@@ -1,11 +1,21 @@
 package com.utsman.kucingapes.sejarahindonesiatoday;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,11 +37,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jaeger.library.StatusBarUtil;
 import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import me.relex.circleindicator.CircleIndicator;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,12 +59,28 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
     FirebaseUser user;
 
+    @BindView(R.id.view_pager) ViewPager viewPager;
+    @BindView(R.id.sign_button) SignInButton signInButton;
+    @BindView(R.id.indicator) CircleIndicator indicator;
+    @BindView(R.id.btnColor) Button btnColor;
+
+    int page = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Tajawal-Medium.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+        //StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setTranslucentForImageView(this, (int) 5f, viewPager);
+        ButterKnife.bind(this);
 
+
+        signInButton.setVisibility(View.GONE);
         if (!FirebaseApp.getApps(this).isEmpty()) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         }
@@ -67,11 +101,65 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
-        SignInButton signInButton = findViewById(R.id.sign_button);
+        //SignInButton signInButton = findViewById(R.id.sign_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
+            }
+        });
+
+        btnColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() +1, true);
+            }
+        });
+        setupViewPager();
+        pageChange();
+
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText("Masuk");
+                return;
+            }
+        }
+    }
+
+    private void setupViewPager() {
+        StartAdapter startAdapter = new StartAdapter(this);
+        viewPager.setAdapter(startAdapter);
+        indicator.setViewPager(viewPager);
+    }
+
+    private void pageChange() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                page = position;
+                switch (position) {
+                    case 2:
+                        btnColor.setVisibility(View.GONE);
+                        signInButton.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        btnColor.setVisibility(View.VISIBLE);
+                        signInButton.setVisibility(View.GONE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -124,25 +212,23 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "sukses", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Sukses", Toast.LENGTH_SHORT).show();
                             updateUI(user);
 
-                            //updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            //Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            //updateUI(null);
-                            Toast.makeText(LoginActivity.this, "gagal", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Gagal, cek koneksi internet anda", Toast.LENGTH_SHORT).show();
                         }
 
                         hideProgressDialog();
 
                     }
                 });
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -189,6 +275,73 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), (Class<?>) activityToLaunch);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        }
+    }
+
+    private class StartAdapter extends PagerAdapter {
+        Context context;
+        LayoutInflater inflater;
+
+        public StartAdapter(Context context) {
+            this.context = context;
+        }
+
+        int[] list_img = {
+                R.drawable.share_on,
+                R.drawable.star,
+                R.drawable.back
+        };
+
+        String[] list_judul = {
+                "Fitur pemberitahuan",
+                "Tidak ada eksplorasi tanggal!",
+                "Aplikasi yang Simpel"
+        };
+
+        String[] list_desc = {
+                "Dapatkan pemberitahuan momen bersejarah sepanjang tahun dan bagikan poster kepada orang lain!",
+                "Aplikasi yang humanis, anda dituntut untuk hafal momen atau tunggu setahun lagi.",
+                "Sederhana dalam poster yang menarik dan bebas iklan!"
+        };
+
+        int[] list_bg = {
+                getResources().getColor(R.color.biru),
+                getResources().getColor(R.color.kuning),
+                getResources().getColor(R.color.hijau)
+        };
+
+        @Override
+        public int getCount() {
+            return list_judul.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return (view == object);
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.item_start, container, false);
+            LinearLayout linearLayout = view.findViewById(R.id.login_start);
+            TextView tvJudulStart = view.findViewById(R.id.start_judul);
+            TextView tvDescStart = view.findViewById(R.id.start_desc);
+            ImageView imgStart = view.findViewById(R.id.imgStart);
+
+            linearLayout.setBackgroundColor(list_bg[position]);
+            tvJudulStart.setText(list_judul[position]);
+            tvDescStart.setText(list_desc[position]);
+            imgStart.setImageResource(list_img[position]);
+
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            container.removeView((LinearLayout) object);
         }
     }
 }

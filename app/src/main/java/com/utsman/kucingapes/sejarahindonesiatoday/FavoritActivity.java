@@ -1,7 +1,9 @@
 package com.utsman.kucingapes.sejarahindonesiatoday;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,9 +20,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.jaeger.library.StatusBarUtil;
 
 import butterknife.BindView;
@@ -32,10 +37,14 @@ public class FavoritActivity extends AppCompatActivity {
 
     @BindView(R.id.back) ImageView backBtn;
     @BindView(R.id.title_toolbar) TextView titleBar;
+    @BindView(R.id.empity) TextView tvEmpity;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
 
     FirebaseAuth mAuth;
     FirebaseUser user;
+    String dataFav;
+    private ProgressDialog mProgressDialog;
 
     private FirebaseRecyclerAdapter<Getter, FavoritActivity.ItemViewHolder> recyclerAdapter;
 
@@ -52,12 +61,13 @@ public class FavoritActivity extends AppCompatActivity {
         configActionBar();
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.setLightMode(this);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
         mDatabase.keepSynced(true);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        //RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Query query = mDatabase.orderByKey();
@@ -101,6 +111,33 @@ public class FavoritActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(recyclerAdapter);
 
+        showProgressDialog();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideProgressDialog();
+                DatabaseReference favDatabase = FirebaseDatabase.getInstance().getReference().child("favDat");
+                favDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataFav = dataSnapshot.child(user.getUid()).child("kosong").getValue(String.class);
+
+                        if (dataFav != null) {
+                            if (dataFav.equals("gak")){
+                                tvEmpity.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }, 1000);
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +145,21 @@ public class FavoritActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setMessage("Loading...");
+        }
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     private void configActionBar() {

@@ -11,4 +11,8 @@
     <color name="fore_blur">#81bababa</color>
 
     <color name="dark">#808080</color>
+
+    <color name="biru">#7e7ebc</color>
+    <color name="hijau">#54a959</color>
+    <color name="kuning">#dfce4b</color>
 </resources>

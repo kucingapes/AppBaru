@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Cemiwiw Poster</string>
+    <string name="app_name">Poster Sejarah Indonesia</string>
 
-    <string name="progmer">Programmer /n kucingapes@outlook.com</string>
+    <string name="progmer">Muhammad Utsman \nkucingapes@outlook.com</string>
+    <string name="kontri1">* Khoeruddin Nur Rochman \nnoerr2@gmail.com</string>
+    <string name="kontri2">* M. Rizki Ramdhani \nemail@email.com</string>
 </resources>

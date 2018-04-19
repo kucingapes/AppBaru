@@ -14,6 +14,8 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -73,6 +75,7 @@ public class MainApp extends AppCompatActivity {
     @BindView(R.id.menu_fav) FloatingActionButton fabFav;
     @BindView(R.id.menu_about) FloatingActionButton fabAbout;
     @BindView(R.id.lay_container) RoundedCornerLayout shareLayout;
+    @BindView(R.id.coordinator) CoordinatorLayout coordinatorLayout;
 
     Bitmap bitmap;
 
@@ -81,6 +84,8 @@ public class MainApp extends AppCompatActivity {
 
     FirebaseUser user;
     FirebaseAuth mAuth;
+
+    String dataFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,9 +233,13 @@ public class MainApp extends AppCompatActivity {
 
                 HashMap<String, Object> favData = new HashMap<>();
                 favData.put("fav", "iye");
+                favData.put("kosong", "gak");
 
                 DatabaseReference favRef = database.getReference("favDat");
                 favRef.child(user.getUid()).setValue(favData);
+
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Poster ditambahkan ke favorit", Snackbar.LENGTH_SHORT);
+                snackbar.show();
 
             }
         });
@@ -238,7 +247,10 @@ public class MainApp extends AppCompatActivity {
         fabFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainApp.this, FavoritActivity.class));
+                Intent intent = new Intent(MainApp.this, FavoritActivity.class);
+                intent.putExtra("dataFav", dataFav);
+                startActivity(intent);
+                ///startActivity(new Intent(MainApp.this, FavoritActivity.class));
                 fabMenu.close(true);
             }
         });
@@ -247,6 +259,7 @@ public class MainApp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainApp.this, Profile.class));
+                fabMenu.close(true);
             }
         });
     }
